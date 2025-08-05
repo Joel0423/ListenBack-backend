@@ -1,15 +1,11 @@
 from fastapi import APIRouter, HTTPException, UploadFile, Form
-from fastapi import Query
-from services.lecture_service import get_lecture_status, list_classroom_lectures
-from services.lecture_service import create_lecture, update_lecture_status, update_lecture_data
-from services.media_upload_cloud import upload_media_to_firebase
-import services.audio_extract as audio_extract
-import services.transcribe as transcribe
-import services.RAG_cloud as RAG_cloud
-import services.preprocess as preprocess
+from fastapi import Query, BackgroundTasks
+from services.lecture_service import get_lecture_status, list_classroom_lectures, get_lecture_data
+from services.lecture_service import create_lecture
 import os
 import shutil
 from pathlib import Path
+from services.lecture_service import process_lecture_upload
 
 lecture_router = APIRouter()
 
@@ -17,11 +13,9 @@ lecture_router = APIRouter()
 async def upload_lecture(
     classroom_id: str = Form(...),
     title: str = Form(...),
-    file: UploadFile = Form(...)
+    file: UploadFile = Form(...),
+    background_tasks: BackgroundTasks = None
 ):
-    audio_path = None
-    file_path = None
-    preprocessed_transcript_path = None
     try:
         # Create Firestore lecture doc with status 'uploading' first
         lecture_data, lecture_id = create_lecture(
@@ -41,54 +35,21 @@ async def upload_lecture(
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        # Upload media to Firebase Storage
-        media_url = upload_media_to_firebase(str(file_path), f"lectures/{lecture_id}/{file.filename}")
-        update_lecture_data(classroom_id, lecture_id, {"media_url": media_url})
+        # Start background processing
+        if background_tasks is not None:
+            background_tasks.add_task(
+                process_lecture_upload,
+                classroom_id=classroom_id,
+                lecture_id=lecture_id,
+                file_path=str(file_path),
+                file_name=file.filename,
+                title=title
+            )
 
-        # Update status to 'transcribing'
-        update_lecture_status(classroom_id, lecture_id, "transcribing")
-
-        # Extract audio and get path
-        audio_path = audio_extract.extract_audio_from_video(lecture_id, str(file_path))
-
-        # Transcribe audio
-        transcribe_result = transcribe.transcribe_audio(str(audio_path))
-        transcription = transcribe_result["text"]
-        duration = transcribe_result.get("duration", 0)
-
-        # Preprocess transcript
-        preprocessed_transcript_path = preprocess.preprocess_transcript(lecture_id, transcription)
-
-        # Upload to RAG engine with preprocessed transcript text
-        rag_file = RAG_cloud.upload_transcript_file_to_corpus(
-            project_id=os.getenv("GCP_PROJECT_ID"),
-            corpus_name=os.getenv("RAG_CORPUS_NAME"),
-            transcript_text_path=preprocessed_transcript_path,
-            display_name=title
-        )
-        rag_file_id = rag_file.name
-
-        # Update Firestore with transcription, rag_file_id, duration, status 'ready'
-        update_lecture_data(classroom_id, lecture_id, {
-            "transcription": transcription,
-            "rag_file_id": rag_file_id,
-            "duration": duration,
-            "status": "ready"
-        })
-
-        return {"success": True, "lecture_id": lecture_id, "media_url": media_url}
+        return {"success": True, "lecture_id": lecture_id}
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    
-    finally:
-        # Clean up local files
-        if file_path and os.path.exists(file_path):
-            os.remove(file_path)
-        if audio_path and os.path.exists(audio_path):
-            os.remove(audio_path)
-        if preprocessed_transcript_path and os.path.exists(preprocessed_transcript_path):
-            os.remove(preprocessed_transcript_path)
 
 @lecture_router.get('/lectures/status')
 async def lecture_status(classroom_id: str = Query(...), lecture_id: str = Query(...)):
@@ -103,5 +64,13 @@ async def classroom_lectures(classroom_id: str = Query(...)):
     try:
         lectures = list_classroom_lectures(classroom_id)
         return {"classroom_id": classroom_id, "lectures": lectures}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
+@lecture_router.get('/lectures')
+async def get_lecture(classroom_id: str = Query(...), lecture_id: str = Query(...)):
+    try:
+        lecture = get_lecture_data(classroom_id, lecture_id)
+        return {"lecture_id": lecture_id, "lecture": lecture}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

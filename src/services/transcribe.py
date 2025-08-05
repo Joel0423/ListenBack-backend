@@ -1,7 +1,9 @@
+import os
 from transformers import pipeline
 
 # Load the Whisper model from Hugging Face
 # You can use "openai/whisper-base" for faster, or "openai/whisper-small"/"openai/whisper-medium"/"openai/whisper-large" for better accuracy
+
 asr = pipeline("automatic-speech-recognition", model="openai/whisper-small", device=0)
 
 
