@@ -63,7 +63,7 @@ def join_classroom(uid, code):
 
     user_data = user_doc.to_dict()
 
-    if user_data['role'] != 'Student':
+    if user_data['role'] != 'Student' and user_data['role'] != 'student':
         raise ValueError('Only students can join classrooms')
 
     # Find classroom by code

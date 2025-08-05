@@ -20,13 +20,17 @@ from services.audio_extract import extract_audio_from_video
 # Initialize Firebase Admin SDK if not already initialized
 if not firebase_admin._apps:
     cred = credentials.Certificate(os.getenv("FIREBASE_CRED_FILE"))
-    firebase_admin.initialize_app(cred)
+    firebase_admin.initialize_app(cred, {
+    'storageBucket': f"{os.getenv('FIREBASE_STORAGE_DEFAULT_BUCKET')}"
+})
 
 from routes.classroom_route import classroom_router
+from routes.lecture_route import lecture_router
 
 app = FastAPI(title="ListenBack - RAG Chatbot for Lectures")
 
 app.include_router(classroom_router)
+app.include_router(lecture_router)
 
 if not os.path.exists("static"):
     os.makedirs("static")
@@ -41,7 +45,7 @@ current_transcript = None
 current_index = None
 lecture_no = 1
 API_KEY = os.getenv("GEMINI_API_KEY")
-PROJECT_ID = os.getenv("PROJECT_ID")
+GCP_PROJECT_ID = os.getenv("GCP_PROJECT_ID")
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -82,7 +86,7 @@ async def upload_file(file: UploadFile = File(...)):
         
         corpus_name = os.environ["RAG_CORPUS_NAME"]  # Must be set in your environment
         rag_file = RAG_cloud.upload_transcript_file_to_corpus(
-            project_id=PROJECT_ID,
+            project_id=GCP_PROJECT_ID,
             corpus_name=corpus_name,
             transcript_file=str(processed_file),
             display_name= "Lecture_" + str(lecture_no)
@@ -108,7 +112,7 @@ async def query(question: str = Form(...)):
         corpus_name = os.environ["RAG_CORPUS_NAME"]
         # Use Gemini RAG answer
         answer = RAG_cloud.vertex_rag_generate_answer(
-            project_id=PROJECT_ID,
+            project_id=GCP_PROJECT_ID,
             corpus_name=corpus_name,
             query=question
         )
