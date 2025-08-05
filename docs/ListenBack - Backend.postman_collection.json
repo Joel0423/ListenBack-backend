@@ -1,0 +1,227 @@
+{
+	"info": {
+		"_postman_id": "1629dbab-20ac-4a15-8e8b-6ec6f0f3f9d8",
+		"name": "ListenBack - Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "47180122",
+		"_collection_link": "https://altimetry-explorer-33781507-6870426.postman.co/workspace/Joel-Abhishek's-Workspace~8a33ac16-5f07-4efd-8978-cef425a1d0bd/collection/47180122-1629dbab-20ac-4a15-8e8b-6ec6f0f3f9d8?action=share&source=collection_link&creator=47180122"
+	},
+	"item": [
+		{
+			"name": "Get a user's classrooms",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/classrooms?uid=2S1z2UrNRweQtOHEgg4QNo0aEX32",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"classrooms"
+					],
+					"query": [
+						{
+							"key": "uid",
+							"value": "2S1z2UrNRweQtOHEgg4QNo0aEX32"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create a classroom",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "uid",
+							"value": "2S1z2UrNRweQtOHEgg4QNo0aEX32",
+							"type": "text"
+						},
+						{
+							"key": "subject",
+							"value": "first class",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "some desc",
+							"type": "text"
+						}
+					]
+				},
+				"url": "localhost:8000/classrooms"
+			},
+			"response": []
+		},
+		{
+			"name": "join classroom",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "uid",
+							"value": "Lv2BbNg70YOykAqJtHGqe5RkRoq1",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "HGH80I",
+							"type": "text"
+						}
+					]
+				},
+				"url": "localhost:8000/classrooms/join"
+			},
+			"response": []
+		},
+		{
+			"name": "get class details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/classrooms/details?classroom_id=ghMjwXHMhPWkG6kCMIVc",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"classrooms",
+						"details"
+					],
+					"query": [
+						{
+							"key": "classroom_id",
+							"value": "ghMjwXHMhPWkG6kCMIVc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload lecture (extract, upload, transcribe, rag file)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "classroom_id",
+							"value": "aaaaaa",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "testing background tasks",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/joela/Pictures/Camera Roll/LB_test.mp4"
+						}
+					]
+				},
+				"url": "localhost:8000/lectures/upload"
+			},
+			"response": []
+		},
+		{
+			"name": "get lecture status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/lectures/status?classroom_id=aaaaaa&lecture_id=udsOO7Wj6u026imA0mvU",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"lectures",
+						"status"
+					],
+					"query": [
+						{
+							"key": "classroom_id",
+							"value": "aaaaaa"
+						},
+						{
+							"key": "lecture_id",
+							"value": "udsOO7Wj6u026imA0mvU"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all lectures",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/classrooms/lectures?classroom_id=aaaaaa",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"classrooms",
+						"lectures"
+					],
+					"query": [
+						{
+							"key": "classroom_id",
+							"value": "aaaaaa"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get a lecture's data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/lectures?classroom_id=aaaaaa&lecture_id=udsOO7Wj6u026imA0mvU",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"lectures"
+					],
+					"query": [
+						{
+							"key": "classroom_id",
+							"value": "aaaaaa"
+						},
+						{
+							"key": "lecture_id",
+							"value": "udsOO7Wj6u026imA0mvU"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
