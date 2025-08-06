@@ -1,4 +1,3 @@
-import os
 from transformers import pipeline
 
 # Load the Whisper model from Hugging Face

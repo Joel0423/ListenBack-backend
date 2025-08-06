@@ -69,21 +69,17 @@ def process_lecture_upload(classroom_id, lecture_id, file_path, file_name, title
         # Upload media to Firebase Storage
         media_url = upload_media_to_firebase(file_path, f"lectures/{lecture_id}/{file_name}")
         update_lecture_data(classroom_id, lecture_id, {"media_url": media_url})
-        print("DONEA")
 
         # Update status to 'transcribing'
         update_lecture_status(classroom_id, lecture_id, "transcribing")
-        print("DONEB")
 
         # Extract audio and get path
         audio_path = audio_extract.extract_audio_from_video(lecture_id, file_path)
-        print("DONEC")
 
         # Transcribe audio
         transcribe_result = transcribe.transcribe_audio(str(audio_path))
         transcription = transcribe_result["text"]
         duration = transcribe_result.get("duration", 0)
-        print("DONED")
 
         # Preprocess transcript
         preprocessed_transcript_path = preprocess.preprocess_transcript(lecture_id, transcription)

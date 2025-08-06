@@ -1,5 +1,6 @@
 import ffmpeg
 from pathlib import Path
+from config import UPLOADS_TEMP_PATH
 
 def extract_audio_from_video(lecture_id: str, video_path: str):
     """
@@ -10,7 +11,7 @@ def extract_audio_from_video(lecture_id: str, video_path: str):
     Returns:
         str: Path to the extracted audio file.
     """
-    upload_folder = Path("static/uploads")
+    upload_folder = Path(f"{UPLOADS_TEMP_PATH}")
     audio_path = upload_folder / f"{lecture_id}_audio.mp3"
     try:
         (

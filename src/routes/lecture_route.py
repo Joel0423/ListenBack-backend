@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, UploadFile, Form
 from fastapi import Query, BackgroundTasks
 from services.lecture_service import get_lecture_status, list_classroom_lectures, get_lecture_data
 from services.lecture_service import create_lecture
-import os
+from config import UPLOADS_TEMP_PATH
 import shutil
 from pathlib import Path
 from services.lecture_service import process_lecture_upload
@@ -29,7 +29,7 @@ async def upload_lecture(
         )
 
         # Save file locally with lecture_id as prefix
-        upload_folder = Path("static/uploads")
+        upload_folder = Path(f"{UPLOADS_TEMP_PATH}")
         upload_folder.mkdir(exist_ok=True, parents=True)
         file_path = upload_folder / f"{lecture_id}_{file.filename}"
         with open(file_path, "wb") as buffer:

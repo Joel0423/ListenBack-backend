@@ -9,6 +9,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import firebase_admin
 from firebase_admin import credentials
+from config import UPLOADS_TEMP_PATH
 
 load_dotenv()
 
@@ -34,7 +35,7 @@ app.include_router(lecture_router)
 
 if not os.path.exists("static"):
     os.makedirs("static")
-    os.makedirs("static/uploads", exist_ok=True)
+    os.makedirs(f"{UPLOADS_TEMP_PATH}", exist_ok=True)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
@@ -60,7 +61,7 @@ async def index(request: Request):
 async def upload_file(file: UploadFile = File(...)):
     global current_video_path, current_transcript, current_index, lecture_no, project_id
     try:
-        upload_folder = Path("static/uploads")
+        upload_folder = Path(f"{UPLOADS_TEMP_PATH}")
         upload_folder.mkdir(exist_ok=True, parents=True)
         file_extension = os.path.splitext(file.filename)[1].lower()
         file_path = upload_folder / file.filename
@@ -68,7 +69,7 @@ async def upload_file(file: UploadFile = File(...)):
             shutil.copyfileobj(file.file, buffer)
         audio_extensions = ['.mp3', '.wav', '.m4a', '.aac', '.flac', '.ogg']
         if file_extension not in audio_extensions:
-            current_video_path = f"/static/uploads/{file.filename}"
+            current_video_path = f"/{UPLOADS_TEMP_PATH}/{file.filename}"
             audio_path = upload_folder / "extracted_audio.mp3"
             extract_audio_from_video(str(file_path), str(audio_path))
         else:
