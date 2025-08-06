@@ -277,33 +277,4 @@ Retrieves complete data for a specific lecture.
 4. If any error occurs, status is updated to "error" with an error message
 5. Client can check status via `/lectures/status` endpoint
 
-## Data Models
 
-### Classroom
-```
-{
-  "classroom_id": string,
-  "subject": string,
-  "description": string,
-  "code": string,         // 6-character alphanumeric join code
-  "teacher_id": string,
-  "members": string[],    // Array of user IDs
-  "createdAt": string,    // ISO datetime string
-  "isActive": boolean
-}
-```
-
-### Lecture
-```
-{
-  "lecture_id": string,
-  "classroomId": string,
-  "title": string,
-  "media_url": string,     // Firebase Storage URL
-  "transcription": string, // Full lecture transcript
-  "rag_file_id": string,   // ID in RAG system
-  "duration": number,      // Duration in seconds
-  "status": string,        // "uploading", "transcribing", "ready", "error"
-  "upload_time": string    // ISO datetime string
-}
-```

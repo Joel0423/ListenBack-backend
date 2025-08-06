@@ -13,7 +13,7 @@ def create_lecture(classroom_id, title, media_url, transcription, rag_file_id, d
     lecture_id = db.collection('lectures').document().id
     lecture_data = {
         "lecture_id": lecture_id,
-        "classroomId": classroom_id,
+        "classroom_id": classroom_id,
         "title": title,
         "media_url": media_url,
         "transcription": transcription,

@@ -40,8 +40,8 @@ def create_classroom(uid, subject, description):
         "code": code,
         "teacher_id": uid,
         "members": [],
-        "createdAt": datetime.utcnow().isoformat(),
-        "isActive": True
+        "created_time": datetime.utcnow().isoformat(),
+        "is_active": True
     }
 
     # Save classroom directly under the classrooms collection
