@@ -18,7 +18,7 @@ async def upload_lecture(
 ):
     try:
         # Create Firestore lecture doc with status 'uploading' first
-        lecture_data, lecture_id = create_lecture(
+        lecture_id = create_lecture(
             classroom_id=classroom_id,
             title=title,
             media_url="",  # will update after upload

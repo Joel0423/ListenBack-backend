@@ -4,10 +4,10 @@
 ```
 {
   "classroom_id": string,
+  "teacher_id": string,
   "subject": string,
   "description": string,
   "code": string,         // 6-character alphanumeric join code
-  "teacher_id": string,
   "members": string[],    // Array of user IDs
   "created_time": string,    // ISO datetime string
   "is_active": boolean

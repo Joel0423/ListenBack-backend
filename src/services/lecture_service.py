@@ -1,31 +1,35 @@
-from firebase_admin import firestore
+from firebase_admin import firestore, storage
 from datetime import datetime
 import os
-from services.media_upload_cloud import upload_media_to_firebase
 import services.audio_extract as audio_extract
 import services.transcribe as transcribe
 import services.preprocess as preprocess
 import services.RAG_cloud as RAG_cloud
 
+# Import the Lecture Pydantic model
+from models.lecture_model import Lecture
+
 db = firestore.client()
 
 def create_lecture(classroom_id, title, media_url, transcription, rag_file_id, duration, status):
     lecture_id = db.collection('lectures').document().id
-    lecture_data = {
-        "lecture_id": lecture_id,
-        "classroom_id": classroom_id,
-        "title": title,
-        "media_url": media_url,
-        "transcription": transcription,
-        "rag_file_id": rag_file_id,
-        "duration": duration,
-        "status": status,
-        "upload_time": datetime.utcnow().isoformat()
-    }
+    upload_time = datetime.now().isoformat()
+    # Use the Lecture Pydantic model
+    lecture = Lecture(
+        lecture_id=lecture_id,
+        classroom_id=classroom_id,
+        title=title,
+        media_url=media_url,
+        transcription=transcription,
+        rag_file_id=rag_file_id,
+        duration=duration,
+        status=status,
+        upload_time=upload_time
+    )
     # Save lecture under lectures>classroom_id>lecture_id
     lecture_ref = db.collection('lectures').document(classroom_id).collection('lectures').document(lecture_id)
-    lecture_ref.set(lecture_data)
-    return lecture_data, lecture_id
+    lecture_ref.set(lecture.model_dump())
+    return lecture.model_dump(), lecture_id
 
 def update_lecture_status(classroom_id, lecture_id, status):
     lecture_ref = db.collection('lectures').document(classroom_id).collection('lectures').document(lecture_id)
@@ -110,3 +114,10 @@ def process_lecture_upload(classroom_id, lecture_id, file_path, file_name, title
             os.remove(audio_path)
         if preprocessed_transcript_path and os.path.exists(preprocessed_transcript_path):
             os.remove(preprocessed_transcript_path)
+
+def upload_media_to_firebase(file_path, dest_blob_name):
+    bucket = storage.bucket()
+    blob = bucket.blob(dest_blob_name)
+    blob.upload_from_filename(file_path)
+    blob.make_public()
+    return blob.public_url

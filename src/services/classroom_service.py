@@ -1,7 +1,8 @@
 import random
 import string
-from datetime import datetime
 from firebase_admin import firestore
+from models.classroom_model import Classroom
+from datetime import datetime
 
 db = firestore.client()
 
@@ -33,25 +34,24 @@ def create_classroom(uid, subject, description):
     code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
 
     classroom_id = db.collection('classrooms').document().id
-    classroom_data = {
-        "classroom_id": classroom_id,
-        "subject": subject,
-        "description": description,
-        "code": code,
-        "teacher_id": uid,
-        "members": [],
-        "created_time": datetime.utcnow().isoformat(),
-        "is_active": True
-    }
+    # Use the Classroom Pydantic model
+    classroom = Classroom(
+        classroom_id=classroom_id,
+        teacher_id=uid,
+        subject=subject,
+        description=description,
+        code=code,
+        created_time=datetime.now().isoformat()
+    )
 
     # Save classroom directly under the classrooms collection
     classroom_ref = db.collection('classrooms').document(classroom_id)
-    classroom_ref.set(classroom_data)
+    classroom_ref.set(classroom.model_dump())
 
     # Update user's classrooms field
     user_ref.update({"classrooms": firestore.ArrayUnion([classroom_id])})
 
-    return classroom_data
+    return classroom.model_dump()
 
 def join_classroom(uid, code):
     """Join a classroom using its code."""
