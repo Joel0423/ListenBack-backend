@@ -26,7 +26,7 @@ def create_classroom(uid, subject, description):
 
     user_data = user_doc.to_dict()
 
-    if user_data['role'] != 'Teacher':
+    if user_data['role'] != 'Teacher' and user_data['role'] != 'teacher':
         raise ValueError('Only teachers can create classrooms')
 
     # Generate random 6-digit alphanumeric code
@@ -80,7 +80,7 @@ def join_classroom(uid, code):
     classroom.reference.update({"members": firestore.ArrayUnion([uid])})
 
     # Update user's classrooms field
-    user_ref.update({"classrooms": firestore.ArrayUnion([classroom_data['class_id']])})
+    user_ref.update({"classrooms": firestore.ArrayUnion([classroom_data['classroom_id']])})
 
     return classroom_data
 
