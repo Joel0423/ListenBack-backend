@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "1629dbab-20ac-4a15-8e8b-6ec6f0f3f9d8",
 		"name": "ListenBack - Backend",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "47180122",
 		"_collection_link": "https://altimetry-explorer-33781507-6870426.postman.co/workspace/Joel-Abhishek's-Workspace~8a33ac16-5f07-4efd-8978-cef425a1d0bd/collection/47180122-1629dbab-20ac-4a15-8e8b-6ec6f0f3f9d8?action=share&source=collection_link&creator=47180122"
 	},
@@ -49,7 +49,7 @@
 						},
 						{
 							"key": "subject",
-							"value": "first class",
+							"value": "fnew class",
 							"type": "text"
 						},
 						{
@@ -59,7 +59,16 @@
 						}
 					]
 				},
-				"url": "localhost:8000/classrooms"
+				"url": {
+					"raw": "localhost:8000/classrooms",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"classrooms"
+					]
+				}
 			},
 			"response": []
 		},
@@ -78,12 +87,22 @@
 						},
 						{
 							"key": "code",
-							"value": "HGH80I",
+							"value": "DKZWEH",
 							"type": "text"
 						}
 					]
 				},
-				"url": "localhost:8000/classrooms/join"
+				"url": {
+					"raw": "localhost:8000/classrooms/join",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"classrooms",
+						"join"
+					]
+				}
 			},
 			"response": []
 		},
@@ -93,7 +112,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8000/classrooms/details?classroom_id=ghMjwXHMhPWkG6kCMIVc",
+					"raw": "localhost:8000/classrooms/details?classroom_id=FEHnxpcrDdE41Tecl6In",
 					"host": [
 						"localhost"
 					],
@@ -105,7 +124,7 @@
 					"query": [
 						{
 							"key": "classroom_id",
-							"value": "ghMjwXHMhPWkG6kCMIVc"
+							"value": "FEHnxpcrDdE41Tecl6In"
 						}
 					]
 				}
@@ -122,7 +141,7 @@
 					"formdata": [
 						{
 							"key": "classroom_id",
-							"value": "aaaaaa",
+							"value": "FEHnxpcrDdE41Tecl6In",
 							"type": "text"
 						},
 						{
@@ -137,7 +156,17 @@
 						}
 					]
 				},
-				"url": "localhost:8000/lectures/upload"
+				"url": {
+					"raw": "localhost:8000/lectures/upload",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"lectures",
+						"upload"
+					]
+				}
 			},
 			"response": []
 		},
@@ -147,7 +176,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8000/lectures/status?classroom_id=aaaaaa&lecture_id=udsOO7Wj6u026imA0mvU",
+					"raw": "localhost:8000/lectures/status?classroom_id=FEHnxpcrDdE41Tecl6In&lecture_id=ukgH18D29XJWSTheVa7H",
 					"host": [
 						"localhost"
 					],
@@ -159,11 +188,11 @@
 					"query": [
 						{
 							"key": "classroom_id",
-							"value": "aaaaaa"
+							"value": "FEHnxpcrDdE41Tecl6In"
 						},
 						{
 							"key": "lecture_id",
-							"value": "udsOO7Wj6u026imA0mvU"
+							"value": "ukgH18D29XJWSTheVa7H"
 						}
 					]
 				}
@@ -176,7 +205,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8000/classrooms/lectures?classroom_id=aaaaaa",
+					"raw": "localhost:8000/classrooms/lectures?classroom_id=FEHnxpcrDdE41Tecl6In",
 					"host": [
 						"localhost"
 					],
@@ -188,7 +217,7 @@
 					"query": [
 						{
 							"key": "classroom_id",
-							"value": "aaaaaa"
+							"value": "FEHnxpcrDdE41Tecl6In"
 						}
 					]
 				}
@@ -201,7 +230,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8000/lectures?classroom_id=aaaaaa&lecture_id=udsOO7Wj6u026imA0mvU",
+					"raw": "localhost:8000/lectures?classroom_id=FEHnxpcrDdE41Tecl6In&lecture_id=ukgH18D29XJWSTheVa7H",
 					"host": [
 						"localhost"
 					],
@@ -212,11 +241,11 @@
 					"query": [
 						{
 							"key": "classroom_id",
-							"value": "aaaaaa"
+							"value": "FEHnxpcrDdE41Tecl6In"
 						},
 						{
 							"key": "lecture_id",
-							"value": "udsOO7Wj6u026imA0mvU"
+							"value": "ukgH18D29XJWSTheVa7H"
 						}
 					]
 				}
