@@ -61,7 +61,7 @@ async def index(request: Request):
 async def upload_file(file: UploadFile = File(...)):
     global current_video_path, current_transcript, current_index, lecture_no, project_id
     try:
-        upload_folder = Path(f"{UPLOADS_TEMP_PATH}")
+        upload_folder = Path(UPLOADS_TEMP_PATH)
         upload_folder.mkdir(exist_ok=True, parents=True)
         file_extension = os.path.splitext(file.filename)[1].lower()
         file_path = upload_folder / file.filename

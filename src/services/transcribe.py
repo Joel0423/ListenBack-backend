@@ -1,22 +1,30 @@
-from transformers import pipeline
+import os
+from groq import Groq
 
-# Load the Whisper model from Hugging Face
-# You can use "openai/whisper-base" for faster, or "openai/whisper-small"/"openai/whisper-medium"/"openai/whisper-large" for better accuracy
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
-asr = pipeline("automatic-speech-recognition", model="openai/whisper-small", device=0)
-
-
-audio_path = None  # Will be set externally
-
-def transcribe_audio(path=None):
+def transcribe_audio(file_path):
     """
-    Transcribe the given audio file and return the result.
+    Transcribe audio using Groq Whisper API.
+    Returns a dict with 'text' and optionally other metadata.
     """
-    target_path = path if path else audio_path
-    if not target_path:
-        raise ValueError("audio_path must be set before transcription.")
-    result = asr(target_path, return_timestamps=True, generate_kwargs={"language": "en"})
-    return result
+
+    with open(file_path, "rb") as file:
+        transcription = client.audio.transcriptions.create(
+            file=(file_path, file.read()),
+            model="whisper-large-v3",
+            temperature=0.1,
+            response_format="verbose_json",
+            language="en",
+            timestamp_granularities=["segment"]
+        )
+
+    print("\n\nTranscription--\n\n", transcription)
+    # transcription.duration is available in verbose_json response
+    return {
+        "text": transcription.text,
+        "duration": getattr(transcription, "duration", None)
+    }
 
 def save_transcription(result, file_name="transcript.txt"):
     """
@@ -24,5 +32,14 @@ def save_transcription(result, file_name="transcript.txt"):
     """
     with open(file_name, "w", encoding="utf-8") as f:
         f.write(result["text"])
-
     print(f"Transcription complete! Saved to {file_name}.")
+
+
+
+if __name__ == "__main__":
+    # Example usage
+    
+    audio_file_path = r"C:\Users\joela\Pictures\Camera Roll\LB_test.mp4"
+    transcription_result = transcribe_audio(audio_file_path)
+
+    print(transcription_result)

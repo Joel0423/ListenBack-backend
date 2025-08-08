@@ -33,12 +33,12 @@ Retrieves all classrooms associated with a user.
       "classrooms": [
         {
           "classroom_id": "ghMjwXHMhPWkG6kCMIVc",
+          "teacher_id": "2S1z2UrNRweQtOHEgg4QNo0aEX32",
           "subject": "Physics 101",
           "description": "Introduction to Physics",
-          "code": "ABC123",
-          "teacher_id": "2S1z2UrNRweQtOHEgg4QNo0aEX32",
+          "code": "ABC123",[]
           "members": ["userId1", "userId2"],
-          "createdAt": "2023-08-01T12:34:56.789Z",
+          "created_time": "2023-08-01T12:34:56.789Z",
           "isActive": true
         }
       ]
@@ -65,12 +65,12 @@ Creates a new classroom with the user as the teacher.
     ```json
     {
       "classroom_id": "ghMjwXHMhPWkG6kCMIVc",
+      "teacher_id": "2S1z2UrNRweQtOHEgg4QNo0aEX32",
       "subject": "Physics 101",
       "description": "Introduction to Physics",
       "code": "ABC123",
-      "teacher_id": "2S1z2UrNRweQtOHEgg4QNo0aEX32",
       "members": [],
-      "createdAt": "2023-08-01T12:34:56.789Z",
+      "created_time": "2023-08-01T12:34:56.789Z",
       "isActive": true
     }
     ```

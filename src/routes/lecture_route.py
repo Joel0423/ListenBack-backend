@@ -18,7 +18,7 @@ async def upload_lecture(
 ):
     try:
         # Create Firestore lecture doc with status 'uploading' first
-        lecture_id = create_lecture(
+        lecture_data, lecture_id = create_lecture(
             classroom_id=classroom_id,
             title=title,
             media_url="",  # will update after upload
@@ -28,8 +28,9 @@ async def upload_lecture(
             status="uploading"
         )
 
+
         # Save file locally with lecture_id as prefix
-        upload_folder = Path(f"{UPLOADS_TEMP_PATH}")
+        upload_folder = Path(UPLOADS_TEMP_PATH)
         upload_folder.mkdir(exist_ok=True, parents=True)
         file_path = upload_folder / f"{lecture_id}_{file.filename}"
         with open(file_path, "wb") as buffer:

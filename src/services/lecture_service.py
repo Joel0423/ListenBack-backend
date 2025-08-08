@@ -77,12 +77,14 @@ def process_lecture_upload(classroom_id, lecture_id, file_path, file_name, title
         # Update status to 'transcribing'
         update_lecture_status(classroom_id, lecture_id, "transcribing")
 
+        
+
         # Extract audio and get path
         audio_path = audio_extract.extract_audio_from_video(lecture_id, file_path)
 
         # Transcribe audio
         transcribe_result = transcribe.transcribe_audio(str(audio_path))
-        transcription = transcribe_result["text"]
+        transcription = transcribe_result.get("text", "")
         duration = transcribe_result.get("duration", 0)
 
         # Preprocess transcript
