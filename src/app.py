@@ -25,13 +25,18 @@ if not firebase_admin._apps:
     'storageBucket': f"{os.getenv('FIREBASE_STORAGE_DEFAULT_BUCKET')}"
 })
 
+
 from routes.classroom_route import classroom_router
 from routes.lecture_route import lecture_router
+from routes.questions_route import questions_router
+
 
 app = FastAPI(title="ListenBack - RAG Chatbot for Lectures")
 
+
 app.include_router(classroom_router)
 app.include_router(lecture_router)
+app.include_router(questions_router)
 
 if not os.path.exists("static"):
     os.makedirs("static")
