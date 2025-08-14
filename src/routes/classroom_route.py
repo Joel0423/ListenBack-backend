@@ -1,12 +1,20 @@
 from fastapi import APIRouter, HTTPException, Form, Query
-from services.classroom_service import list_user_classrooms, create_classroom, join_classroom, get_classroom_details
+from services.classroom_service import get_user_classrooms, list_user_classroom_ids, create_classroom, join_classroom, get_classroom_details
 
 classroom_router = APIRouter()
 
-@classroom_router.get('/classrooms')
-async def list_classrooms(uid: str = Query(...)):
+@classroom_router.get('/classrooms/list')
+async def list_classroom_ids(uid: str = Query(...)):
     try:
-        classrooms = list_user_classrooms(uid)
+        classrooms = list_user_classroom_ids(uid)
+        return {"classrooms": classrooms}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
+@classroom_router.get('/classrooms')
+async def get_classrooms(uid: str = Query(...)):
+    try:
+        classrooms = get_user_classrooms(uid)
         return {"classrooms": classrooms}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

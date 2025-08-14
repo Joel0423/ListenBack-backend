@@ -8,7 +8,7 @@
 	},
 	"item": [
 		{
-			"name": "Get a user's classrooms",
+			"name": "Get a user's classrooms ids",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -16,13 +16,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8000/classrooms?uid=2S1z2UrNRweQtOHEgg4QNo0aEX32",
+					"raw": "localhost:8000/classrooms/list?uid=2S1z2UrNRweQtOHEgg4QNo0aEX32",
 					"host": [
 						"localhost"
 					],
 					"port": "8000",
 					"path": [
-						"classrooms"
+						"classrooms",
+						"list"
 					],
 					"query": [
 						{
@@ -107,7 +108,7 @@
 			"response": []
 		},
 		{
-			"name": "get class details",
+			"name": "get one class details",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -246,6 +247,95 @@
 						{
 							"key": "lecture_id",
 							"value": "ukgH18D29XJWSTheVa7H"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "asking questions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/ask?uid=ssda&lecture_id=ukgH18D29XJWSTheVa7H&rag_file_id=projects/listenback/locations/us-central1/ragCorpora/5685794529555251200/ragFiles/5495530124091581338&question=who is this",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"ask"
+					],
+					"query": [
+						{
+							"key": "uid",
+							"value": "ssda"
+						},
+						{
+							"key": "lecture_id",
+							"value": "ukgH18D29XJWSTheVa7H"
+						},
+						{
+							"key": "rag_file_id",
+							"value": "projects/listenback/locations/us-central1/ragCorpora/5685794529555251200/ragFiles/5495530124091581338"
+						},
+						{
+							"key": "question",
+							"value": "who is this"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get lecture chat history",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/ask/history?uid=ssda&lecture_id=ukgH18D29XJWSTheVa7H",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"ask",
+						"history"
+					],
+					"query": [
+						{
+							"key": "uid",
+							"value": "ssda"
+						},
+						{
+							"key": "lecture_id",
+							"value": "ukgH18D29XJWSTheVa7H"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all classrooms details of a user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/classrooms?uid=2S1z2UrNRweQtOHEgg4QNo0aEX32",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"classrooms"
+					],
+					"query": [
+						{
+							"key": "uid",
+							"value": "2S1z2UrNRweQtOHEgg4QNo0aEX32"
 						}
 					]
 				}

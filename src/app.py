@@ -33,7 +33,6 @@ from routes.questions_route import questions_router
 
 app = FastAPI(title="ListenBack - RAG Chatbot for Lectures")
 
-
 app.include_router(classroom_router)
 app.include_router(lecture_router)
 app.include_router(questions_router)
@@ -56,7 +55,7 @@ GCP_PROJECT_ID = os.getenv("GCP_PROJECT_ID")
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
-    return templates.TemplateResponse("index.html", {
+    return templates.TemplateResponse("home.html", {
         "request": request,
         "video_path": current_video_path,
         "transcript": current_transcript

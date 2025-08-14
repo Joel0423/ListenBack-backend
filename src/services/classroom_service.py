@@ -6,8 +6,8 @@ from datetime import datetime
 
 db = firestore.client()
 
-def list_user_classrooms(uid):
-    """List classrooms for a given user."""
+def list_user_classroom_ids(uid):
+    """List classroom IDs for a given user."""
     user_ref = db.collection('users').document(uid)
     user_doc = user_ref.get()
 
@@ -16,6 +16,30 @@ def list_user_classrooms(uid):
 
     user_data = user_doc.to_dict()
     return user_data.get('classrooms', [])
+
+def get_user_classrooms(uid):
+    """List classrooms for a given user."""
+    user_ref = db.collection('users').document(uid)
+    user_doc = user_ref.get()
+
+    if not user_doc.exists:
+        raise ValueError('User not found')
+
+    user_data = user_doc.to_dict()
+
+    classroom_ids = user_data.get('classrooms', [])
+
+    # Batch fetch classroom documents
+    classroom_refs = [db.collection('classrooms').document(cid) for cid in classroom_ids]
+    classroom_docs = db.get_all(classroom_refs)
+
+    classrooms = []
+    for doc in classroom_docs:
+        if doc.exists:
+            data = doc.to_dict()
+            classrooms.append(data)
+
+    return classrooms
 
 def create_classroom(uid, subject, description):
     """Create a new classroom for a teacher."""
