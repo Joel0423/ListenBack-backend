@@ -13,5 +13,5 @@ def preprocess_transcript(lecture_id, transcript_text):
     with open(out_path, "w", encoding="utf-8") as f:
         for sentence in sentences:
             f.write(sentence + ".\n")
-    print(f"Preprocessed transcript saved to {out_path}")
+
     return str(out_path)
