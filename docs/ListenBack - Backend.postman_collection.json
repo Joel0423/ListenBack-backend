@@ -36,6 +36,30 @@
 			"response": []
 		},
 		{
+			"name": "get all classrooms details of a user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/classrooms?uid=2S1z2UrNRweQtOHEgg4QNo0aEX32",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"classrooms"
+					],
+					"query": [
+						{
+							"key": "uid",
+							"value": "2S1z2UrNRweQtOHEgg4QNo0aEX32"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "create a classroom",
 			"request": {
 				"method": "POST",
@@ -88,7 +112,7 @@
 						},
 						{
 							"key": "code",
-							"value": "DKZWEH",
+							"value": "M8G51L",
 							"type": "text"
 						}
 					]
@@ -113,7 +137,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8000/classrooms/details?classroom_id=FEHnxpcrDdE41Tecl6In",
+					"raw": "localhost:8000/classrooms/details?classroom_id=zXVIqWiI7QYOpTxPusI8",
 					"host": [
 						"localhost"
 					],
@@ -125,7 +149,32 @@
 					"query": [
 						{
 							"key": "classroom_id",
-							"value": "FEHnxpcrDdE41Tecl6In"
+							"value": "zXVIqWiI7QYOpTxPusI8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all lectures",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/classrooms/lectures?classroom_id=Wt3OUwZ4drcpzN7u4jb3",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"classrooms",
+						"lectures"
+					],
+					"query": [
+						{
+							"key": "classroom_id",
+							"value": "Wt3OUwZ4drcpzN7u4jb3"
 						}
 					]
 				}
@@ -142,7 +191,7 @@
 					"formdata": [
 						{
 							"key": "classroom_id",
-							"value": "FEHnxpcrDdE41Tecl6In",
+							"value": "zXVIqWiI7QYOpTxPusI8",
 							"type": "text"
 						},
 						{
@@ -177,7 +226,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8000/lectures/status?classroom_id=FEHnxpcrDdE41Tecl6In&lecture_id=ukgH18D29XJWSTheVa7H",
+					"raw": "localhost:8000/lectures/status?classroom_id=zXVIqWiI7QYOpTxPusI8&lecture_id=3TkIwtMgJqYavBqUWwuD",
 					"host": [
 						"localhost"
 					],
@@ -189,36 +238,11 @@
 					"query": [
 						{
 							"key": "classroom_id",
-							"value": "FEHnxpcrDdE41Tecl6In"
+							"value": "zXVIqWiI7QYOpTxPusI8"
 						},
 						{
 							"key": "lecture_id",
-							"value": "ukgH18D29XJWSTheVa7H"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "get all lectures",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:8000/classrooms/lectures?classroom_id=FEHnxpcrDdE41Tecl6In",
-					"host": [
-						"localhost"
-					],
-					"port": "8000",
-					"path": [
-						"classrooms",
-						"lectures"
-					],
-					"query": [
-						{
-							"key": "classroom_id",
-							"value": "FEHnxpcrDdE41Tecl6In"
+							"value": "3TkIwtMgJqYavBqUWwuD"
 						}
 					]
 				}
@@ -231,7 +255,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8000/lectures?classroom_id=FEHnxpcrDdE41Tecl6In&lecture_id=ukgH18D29XJWSTheVa7H",
+					"raw": "localhost:8000/lectures?classroom_id=zXVIqWiI7QYOpTxPusI8&lecture_id=3TkIwtMgJqYavBqUWwuD",
 					"host": [
 						"localhost"
 					],
@@ -242,11 +266,11 @@
 					"query": [
 						{
 							"key": "classroom_id",
-							"value": "FEHnxpcrDdE41Tecl6In"
+							"value": "zXVIqWiI7QYOpTxPusI8"
 						},
 						{
 							"key": "lecture_id",
-							"value": "ukgH18D29XJWSTheVa7H"
+							"value": "3TkIwtMgJqYavBqUWwuD"
 						}
 					]
 				}
@@ -312,30 +336,6 @@
 						{
 							"key": "lecture_id",
 							"value": "ukgH18D29XJWSTheVa7H"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "get all classrooms details of a user",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:8000/classrooms?uid=2S1z2UrNRweQtOHEgg4QNo0aEX32",
-					"host": [
-						"localhost"
-					],
-					"port": "8000",
-					"path": [
-						"classrooms"
-					],
-					"query": [
-						{
-							"key": "uid",
-							"value": "2S1z2UrNRweQtOHEgg4QNo0aEX32"
 						}
 					]
 				}
