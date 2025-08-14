@@ -3,11 +3,11 @@ from vertexai.generative_models import GenerativeModel, Tool
 import vertexai
 import os
 
-def get_rag_lecture_chat_model(project_id, rag_file_id, top_k=3, location="us-central1", vector_distance_threshold=0.5, model_name="gemini-2.0-flash-001"):
+def get_rag_lecture_chat_model(project_id, corpus_name, rag_file_id, top_k, location, vector_distance_threshold, model_name):
     """
     Returns a GenerativeModel for chat, configured for a specific RAG file.
     """
-    corpus_name  = os.environ.get("RAG_CORPUS_NAME")
+    
     vertexai.init(project=project_id, location=location)
     rag_retrieval_config = rag.RagRetrievalConfig(
         top_k=top_k,

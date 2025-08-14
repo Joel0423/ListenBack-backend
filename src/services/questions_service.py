@@ -4,6 +4,7 @@ from vertexai.generative_models import Content, Part
 from models.chat_history_model import ChatHistoryModel
 from firebase_admin import firestore
 from services.chat_session_manager import ChatSessionManager
+from config import RAG_TOP_K, RAG_LOCATION, RAG_VECTOR_DISTANCE_THRESHOLD, RAG_MODEL_NAME
 
 session_manager = ChatSessionManager(timeout_seconds=1800)
 
@@ -32,6 +33,7 @@ def chat_service(uid: str, lecture_id: str, rag_file_id: str, question: str):
     Uses Vertex AI RAG engine to answer a question for a given user and specific rag file, with chat history stored in Firestore and session manager.
     """
     project_id = os.getenv("GCP_PROJECT_ID")
+    corpus_name  = os.environ.get("RAG_CORPUS_NAME")
     db = firestore.client()
     chat_ref = db.collection("chat_history").document(lecture_id).collection(uid).document("history")
 
@@ -44,7 +46,8 @@ def chat_service(uid: str, lecture_id: str, rag_file_id: str, question: str):
             history = deserialize_history(history_data["history"])
         else:
             history = []
-        chat_model = get_rag_lecture_chat_model(project_id, rag_file_id)
+            
+        chat_model = get_rag_lecture_chat_model(project_id, corpus_name, rag_file_id, RAG_TOP_K, RAG_LOCATION, RAG_VECTOR_DISTANCE_THRESHOLD, RAG_MODEL_NAME)
         chat_session = chat_model.start_chat(history=history)
         session_manager.set_session(uid, lecture_id, chat_session, history)
 
