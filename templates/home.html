@@ -138,20 +138,14 @@
         async function fetchClassrooms() {
             let res = await fetch(`/classrooms?uid=${uid}`);
             let data = await res.json();
-            let classroom_ids = data.classrooms || [];
+            classrooms = data.classrooms || [];
             let listHtml = '';
-            if (classroom_ids.length === 0) listHtml = '<p>No classrooms found.</p>';
-            classrooms = [];
-            for (let id of classroom_ids) {
-                let detailRes = await fetch(`/classrooms/details?classroom_id=${id}`);
-                if (detailRes.ok) {
-                    let detail = await detailRes.json();
-                    classrooms.push(detail);
-                    listHtml += `<div class='classroom-card'><span class='classroom-title'>${detail.subject}</span> <br>${detail.description}<br>Code: <b>${detail.code}</b><br>`;
-                    listHtml += `<button class='btn' onclick='enterClassroom("${detail.classroom_id}")'>Enter</button>`;
-                    listHtml += `</div>`;
-                }
-            }
+            if (classrooms.length === 0) listHtml = '<p>No classrooms found.</p>';
+            classrooms.forEach(detail => {
+                listHtml += `<div class='classroom-card'><span class='classroom-title'>${detail.subject}</span> <br>${detail.description}<br>Code: <b>${detail.code}</b><br>`;
+                listHtml += `<button class='btn' onclick='enterClassroom("${detail.classroom_id}")'>Enter</button>`;
+                listHtml += `</div>`;
+            });
             document.getElementById('classroom-list').innerHTML = listHtml;
         }
         // --- Create/Join Classroom ---
@@ -261,7 +255,11 @@
             let historyDiv = document.getElementById('chat-history');
             historyDiv.innerHTML = '';
             history.forEach(h => {
-                historyDiv.innerHTML += `<div><b>You:</b> ${h.question}</div><div><b>Bot:</b> ${h.answer}</div>`;
+                if (h.role === 'user') {
+                    historyDiv.innerHTML += `<div><b>You:</b> ${h.parts[0]}</div>`;
+                } else if (h.role === 'model') {
+                    historyDiv.innerHTML += `<div><b>Bot:</b> ${h.parts[0]}</div>`;
+                }
             });
         }
     </script>

@@ -48,12 +48,15 @@ def chat_service(uid: str, lecture_id: str, rag_file_id: str, question: str):
         chat_session = chat_model.start_chat(history=history)
         session_manager.set_session(uid, lecture_id, chat_session, history)
 
+    # Always append new question/answer, but avoid double appending if chat_session.send_message already appends internally
+    prev_len = len(history)
     response = chat_session.send_message(question)
     answer = response.text
 
-    # Append new exchange to history
-    history.append(Content(role="user", parts=[Part.from_text(question)]))
-    history.append(Content(role="model", parts=[Part.from_text(answer)]))
+    # If chat_session.send_message did NOT append, do it here
+    if len(history) == prev_len:
+        history.append(Content(role="user", parts=[Part.from_text(question)]))
+        history.append(Content(role="model", parts=[Part.from_text(answer)]))
     chat_ref.set({"history": serialize_history(history)})
     session_manager.set_session(uid, lecture_id, chat_session, history)
     session_manager.clear_expired_sessions()
