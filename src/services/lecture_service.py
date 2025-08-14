@@ -5,13 +5,15 @@ import services.audio_extract as audio_extract
 import services.transcribe as transcribe
 import services.preprocess as preprocess
 import services.RAG_cloud as RAG_cloud
-
-# Import the Lecture Pydantic model
 from models.lecture_model import Lecture
 
 db = firestore.client()
 
 def create_lecture(classroom_id, title, media_url, transcription, rag_file_id, duration, status):
+    """
+    Create a new lecture document in Firestore.
+    """
+
     lecture_id = db.collection('lectures').document().id
     upload_time = datetime.now().isoformat()
     # Use the Lecture Pydantic model
@@ -32,10 +34,16 @@ def create_lecture(classroom_id, title, media_url, transcription, rag_file_id, d
     return lecture.model_dump(), lecture_id
 
 def update_lecture_status(classroom_id, lecture_id, status):
+    """
+    Update the status of a lecture document.
+    """
     lecture_ref = db.collection('lectures').document(classroom_id).collection('lectures').document(lecture_id)
     lecture_ref.update({"status": status})
 
 def update_lecture_data(classroom_id, lecture_id, update_fields):
+    """
+    Update specific fields of a lecture document.
+    """
     lecture_ref = db.collection('lectures').document(classroom_id).collection('lectures').document(lecture_id)
     lecture_ref.update(update_fields)
 
@@ -62,9 +70,10 @@ def get_lecture_data(classroom_id, lecture_id):
         raise ValueError('Lecture not found')
     return lecture_doc.to_dict()
 
-
-# handle lecture upload processing
 def process_lecture_upload(classroom_id, lecture_id, file_path, file_name, title):
+    """
+    Process the upload of a lecture file.
+    """
 
     media_url = None
     audio_path = None
@@ -118,6 +127,9 @@ def process_lecture_upload(classroom_id, lecture_id, file_path, file_name, title
             os.remove(preprocessed_transcript_path)
 
 def upload_media_to_firebase(file_path, dest_blob_name):
+    """
+    Upload media file to Firebase Storage and return the public URL.
+    """
     bucket = storage.bucket()
     blob = bucket.blob(dest_blob_name)
     blob.upload_from_filename(file_path)
