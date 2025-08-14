@@ -28,3 +28,11 @@
   "upload_time": string    // ISO datetime string
 }
 ```
+
+### ChatHistoryModel
+```
+{
+  "role": string,         // 'user' or 'model'
+  "parts": string[]       // Array of message parts (usually one string per message)
+}
+```

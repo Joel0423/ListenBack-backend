@@ -25,21 +25,3 @@ def transcribe_audio(file_path):
         "text": transcription.text,
         "duration": getattr(transcription, "duration", None)
     }
-
-def save_transcription(result, file_name="transcript.txt"):
-    """
-    Save the transcription result to a text file.
-    """
-    with open(file_name, "w", encoding="utf-8") as f:
-        f.write(result["text"])
-    print(f"Transcription complete! Saved to {file_name}.")
-
-
-
-if __name__ == "__main__":
-    # Example usage
-    
-    audio_file_path = r"C:\Users\joela\Pictures\Camera Roll\LB_test.mp4"
-    transcription_result = transcribe_audio(audio_file_path)
-
-    print(transcription_result)
