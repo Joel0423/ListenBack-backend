@@ -5,264 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ListenBack Classroom Test</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f4f6fa;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
-            padding: 32px 24px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #2d3a4b;
-        }
-
-        .login-btn {
-            width: 180px;
-            margin: 10px;
-            padding: 12px;
-            font-size: 1.1em;
-            border-radius: 8px;
-            border: none;
-            background: #2d3a4b;
-            color: #fff;
-            cursor: pointer;
-        }
-
-        .classroom-card {
-            background: #f7f9fc;
-            border-radius: 8px;
-            margin: 16px 0;
-            padding: 18px;
-            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
-        }
-
-        .classroom-title {
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-
-        .lecture-list {
-            margin-top: 10px;
-        }
-
-        .lecture-item {
-            margin: 6px 0;
-        }
-
-        .btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: none;
-            background: #2d3a4b;
-            color: #fff;
-            cursor: pointer;
-            margin-right: 8px;
-        }
-
-        .chat-box {
-            border: 1px solid #e0e4ea;
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 16px;
-            background: #f7f9fc;
-        }
-
-        .chat-history {
-            max-height: 180px;
-            overflow-y: auto;
-            margin-bottom: 10px;
-        }
-
-        .chat-input {
-            width: 80%;
-            padding: 8px;
-            border-radius: 6px;
-            border: 1px solid #e0e4ea;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/custom.css">
 </head>
 
-<body>
-    <div class="container" id="main-container">
-        <h1>ListenBack Classroom Test</h1>
-        <div id="login-section">
-            <button class="login-btn" onclick="login('student')">Student Login</button>
-            <button class="login-btn" onclick="login('teacher')">Teacher Login</button>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto py-8 px-2">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-blue-900">ListenBack Classroom Test</h1>
+            <button id="home-btn" class="hidden px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800"
+                onclick="goHome()">Home</button>
         </div>
-        <div id="home-section" style="display:none;"></div>
-        <div id="classroom-section" style="display:none;"></div>
-        <div id="lecture-section" style="display:none;"></div>
+        <div id="login-section" class="flex flex-col items-center space-y-4">
+            <button class="w-64 py-3 bg-blue-700 text-white rounded-lg text-lg font-semibold hover:bg-blue-800"
+                onclick="login('student')">Student Login</button>
+            <button class="w-64 py-3 bg-green-600 text-white rounded-lg text-lg font-semibold hover:bg-green-700"
+                onclick="login('teacher')">Teacher Login</button>
+        </div>
+        <div id="home-section" class="hidden"></div>
+        <div id="classroom-section" class="hidden"></div>
+        <div id="lecture-section" class="hidden"></div>
     </div>
-    <script>
-        // --- State ---
-        let userType = null;
-        let uid = null;
-        let classrooms = [];
-        let currentClassroom = null;
-        let currentLecture = null;
-        let rag_file_id = null;
-        // --- Login ---
-        function login(type) {
-            userType = type;
-            uid = (type === 'student') ? 'Lv2BbNg70YOykAqJtHGqe5RkRoq1' : '2S1z2UrNRweQtOHEgg4QNo0aEX32';
-            document.getElementById('login-section').style.display = 'none';
-            loadHome();
-        }
-        // --- Home Page ---
-        async function loadHome() {
-            document.getElementById('home-section').style.display = '';
-            document.getElementById('classroom-section').style.display = 'none';
-            document.getElementById('lecture-section').style.display = 'none';
-            let html = `<h2>Welcome, ${userType.charAt(0).toUpperCase() + userType.slice(1)}</h2>`;
-            html += `<div>`;
-            if (userType === 'teacher') {
-                html += `<button class='btn' onclick='showCreateClassroom()'>Create Classroom</button>`;
-            } else {
-                html += `<button class='btn' onclick='showJoinClassroom()'>Join Classroom</button>`;
-            }
-            html += `</div><div id='classroom-list'></div>`;
-            document.getElementById('home-section').innerHTML = html;
-            await fetchClassrooms();
-        }
-        async function fetchClassrooms() {
-            let res = await fetch(`/classrooms?uid=${uid}`);
-            let data = await res.json();
-            classrooms = data.classrooms || [];
-            let listHtml = '';
-            if (classrooms.length === 0) listHtml = '<p>No classrooms found.</p>';
-            classrooms.forEach(detail => {
-                listHtml += `<div class='classroom-card'><span class='classroom-title'>${detail.subject}</span> <br>${detail.description}<br>Code: <b>${detail.code}</b><br>`;
-                listHtml += `<button class='btn' onclick='enterClassroom("${detail.classroom_id}")'>Enter</button>`;
-                listHtml += `</div>`;
-            });
-            document.getElementById('classroom-list').innerHTML = listHtml;
-        }
-        // --- Create/Join Classroom ---
-        function showCreateClassroom() {
-            document.getElementById('home-section').innerHTML += `<div id='create-classroom'><h3>Create Classroom</h3><input id='subject' placeholder='Subject'><br><input id='desc' placeholder='Description'><br><button class='btn' onclick='createClassroom()'>Create</button></div>`;
-        }
-        async function createClassroom() {
-            let subject = document.getElementById('subject').value;
-            let desc = document.getElementById('desc').value;
-            let fd = new FormData();
-            fd.append('uid', uid);
-            fd.append('subject', subject);
-            fd.append('description', desc);
-            let res = await fetch('/classrooms', { method: 'POST', body: fd });
-            if (res.ok) { document.getElementById('create-classroom').remove(); await fetchClassrooms(); }
-        }
-        function showJoinClassroom() {
-            document.getElementById('home-section').innerHTML += `<div id='join-classroom'><h3>Join Classroom</h3><input id='join-code' placeholder='Classroom Code'><br><button class='btn' onclick='joinClassroom()'>Join</button></div>`;
-        }
-        async function joinClassroom() {
-            let code = document.getElementById('join-code').value;
-            let fd = new FormData();
-            fd.append('uid', uid);
-            fd.append('code', code);
-            let res = await fetch('/classrooms/join', { method: 'POST', body: fd });
-            if (res.ok) { document.getElementById('join-classroom').remove(); await fetchClassrooms(); }
-        }
-        // --- Enter Classroom ---
-        async function enterClassroom(classroom_id) {
-            document.getElementById('home-section').style.display = 'none';
-            document.getElementById('classroom-section').style.display = '';
-            document.getElementById('lecture-section').style.display = 'none';
-            currentClassroom = classroom_id;
-            let res = await fetch(`/classrooms/details?classroom_id=${classroom_id}`);
-            let data = await res.json();
-            let html = `<h2>${data.subject}</h2><p>${data.description}</p>`;
-            html += `<div id='lecture-list'></div>`;
-            if (userType === 'teacher') {
-                html += `<button class='btn' onclick='showCreateLecture()'>Create Lecture</button>`;
-            }
-            html += `<button class='btn' onclick='loadHome()'>Back</button>`;
-            document.getElementById('classroom-section').innerHTML = html;
-            await fetchLectures(classroom_id);
-        }
-        async function fetchLectures(classroom_id) {
-            let res = await fetch(`/classrooms/lectures?classroom_id=${classroom_id}`);
-            let data = await res.json();
-            let lectures = data.lectures || [];
-            let listHtml = '';
-            if (lectures.length === 0) listHtml = '<p>No lectures found.</p>';
-            lectures.forEach(l => {
-                listHtml += `<div class='lecture-item'>${l.title} <button class='btn' onclick='enterLecture("${l.lecture_id}")'>View</button></div>`;
-            });
-            document.getElementById('lecture-list').innerHTML = listHtml;
-        }
-        // --- Create Lecture (Teacher) ---
-        function showCreateLecture() {
-            document.getElementById('classroom-section').innerHTML += `<div id='create-lecture'><h3>Create Lecture</h3><input id='lecture-title' placeholder='Title'><br><input type='file' id='lecture-file'><br><button class='btn' onclick='createLecture()'>Upload</button></div>`;
-        }
-        async function createLecture() {
-            let title = document.getElementById('lecture-title').value;
-            let file = document.getElementById('lecture-file').files[0];
-            let fd = new FormData();
-            fd.append('classroom_id', currentClassroom);
-            fd.append('title', title);
-            fd.append('file', file);
-            let res = await fetch('/lectures/upload', { method: 'POST', body: fd });
-            if (res.ok) { document.getElementById('create-lecture').remove(); await fetchLectures(currentClassroom); }
-        }
-        // --- Enter Lecture ---
-        async function enterLecture(lecture_id) {
-            document.getElementById('home-section').style.display = 'none';
-            document.getElementById('classroom-section').style.display = 'none';
-            document.getElementById('lecture-section').style.display = '';
-            currentLecture = lecture_id;
-            let res = await fetch(`/lectures?classroom_id=${currentClassroom}&lecture_id=${lecture_id}`);
-            let data = await res.json();
-            let lecture = data.lecture;
-            rag_file_id = lecture.rag_file_id;
-            let html = `<h2>${lecture.title}</h2>`;
-            if (lecture.media_url) {
-                if (lecture.media_url.endsWith('.mp4')) {
-                    html += `<video src='${lecture.media_url}' controls width='400'></video>`;
-                } else {
-                    html += `<audio src='${lecture.media_url}' controls></audio>`;
-                }
-            }
-            html += `<div class='chat-box'><div class='chat-history' id='chat-history'></div><input class='chat-input' id='chat-input' placeholder='Ask a question...'><button class='btn' onclick='askQuestion()'>Ask</button></div>`;
-            html += `<button class='btn' onclick='enterClassroom("${currentClassroom}")'>Back</button>`;
-            document.getElementById('lecture-section').innerHTML = html;
-            await fetchChatHistory();
-        }
-        // --- Chat ---
-        async function askQuestion() {
-            let question = document.getElementById('chat-input').value;
-            if (!question) return;
-            let res = await fetch(`/ask?uid=${uid}&lecture_id=${currentLecture}&rag_file_id=${rag_file_id}&question=${encodeURIComponent(question)}`);
-            let data = await res.json();
-            let historyDiv = document.getElementById('chat-history');
-            historyDiv.innerHTML += `<div><b>You:</b> ${question}</div><div><b>Bot:</b> ${data.answer}</div>`;
-            document.getElementById('chat-input').value = '';
-        }
-        async function fetchChatHistory() {
-            let res = await fetch(`/ask/history?uid=${uid}&lecture_id=${currentLecture}`);
-            let data = await res.json();
-            let history = data.history || [];
-            let historyDiv = document.getElementById('chat-history');
-            historyDiv.innerHTML = '';
-            history.forEach(h => {
-                if (h.role === 'user') {
-                    historyDiv.innerHTML += `<div><b>You:</b> ${h.parts[0]}</div>`;
-                } else if (h.role === 'model') {
-                    historyDiv.innerHTML += `<div><b>Bot:</b> ${h.parts[0]}</div>`;
-                }
-            });
-        }
-    </script>
+    <script src="/static/js/home.js"></script>
 </body>
 
 </html>
